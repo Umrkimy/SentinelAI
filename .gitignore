@@ -1,0 +1,15 @@
+# Local Python environment and generated cache files
+.venv/
+__pycache__/
+*.py[cod]
+
+# Local Codex configuration
+.codex/
+
+# Jupyter temporary files
+.ipynb_checkpoints/
+
+# Local learning notes and Codex instructions
+AGENTS.md
+md/
+guide/
