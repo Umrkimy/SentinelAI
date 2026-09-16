@@ -68,6 +68,9 @@ def predict_and_store(
         failure_probability=model_result.failure_probability,
         threshold=model_result.threshold,
         risk=model_result.risk,
+        anomaly_score=model_result.anomaly_score,
+        is_anomaly=model_result.is_anomaly,
+        anomaly_model_name=model_result.anomaly_model_name,
     )
     db.add(stored_prediction)
     try:
@@ -85,6 +88,9 @@ def predict_and_store(
         failure_probability=stored_prediction.failure_probability,
         risk=stored_prediction.risk,
         threshold=stored_prediction.threshold,
+        anomaly_score=stored_prediction.anomaly_score,
+        is_anomaly=stored_prediction.is_anomaly,
+        anomaly_model_name=stored_prediction.anomaly_model_name,
         created_at=stored_prediction.created_at,
     )
 
@@ -119,6 +125,9 @@ def prediction_history(
             failure_probability=prediction.failure_probability,
             risk=prediction.risk,
             threshold=prediction.threshold,
+            anomaly_score=prediction.anomaly_score,
+            is_anomaly=prediction.is_anomaly,
+            anomaly_model_name=prediction.anomaly_model_name,
             recorded_at=reading.recorded_at,
             air_temperature_k=reading.air_temperature_k,
             process_temperature_k=reading.process_temperature_k,

@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import TYPE_CHECKING
 
-from sqlalchemy import DateTime, Float, ForeignKey, String, func
+from sqlalchemy import Boolean, DateTime, Float, ForeignKey, String, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from backend.app.db.session import Base
@@ -23,6 +23,12 @@ class Prediction(Base):
     failure_probability: Mapped[float] = mapped_column(Float)
     threshold: Mapped[float] = mapped_column(Float)
     risk: Mapped[str] = mapped_column(String(10))
+    anomaly_score: Mapped[float | None] = mapped_column(Float, nullable=True)
+    is_anomaly: Mapped[bool | None] = mapped_column(Boolean, nullable=True)
+    anomaly_model_name: Mapped[str | None] = mapped_column(
+        String(100),
+        nullable=True,
+    )
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         server_default=func.now(),

@@ -57,6 +57,9 @@ def test_stored_prediction_appears_in_equipment_history(client: TestClient) -> N
     prediction = prediction_response.json()
     assert prediction["equipment_id"] == equipment["id"]
     assert prediction["risk"] == "HIGH"
+    assert isinstance(prediction["anomaly_score"], float)
+    assert isinstance(prediction["is_anomaly"], bool)
+    assert prediction["anomaly_model_name"] == "Isolation Forest healthy-baseline v1"
 
     history_response = client.get(f"/equipment/{equipment['id']}/predictions")
 
@@ -66,6 +69,8 @@ def test_stored_prediction_appears_in_equipment_history(client: TestClient) -> N
     assert history[0]["prediction_id"] == prediction["prediction_id"]
     assert history[0]["sensor_reading_id"] == prediction["sensor_reading_id"]
     assert history[0]["torque_nm"] == 65.0
+    assert history[0]["anomaly_score"] == prediction["anomaly_score"]
+    assert history[0]["is_anomaly"] == prediction["is_anomaly"]
 
 
 def test_prediction_for_unknown_equipment_is_rejected(client: TestClient) -> None:

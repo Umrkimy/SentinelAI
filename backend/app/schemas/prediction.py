@@ -16,6 +16,9 @@ class PredictionResponse(BaseModel):
     failure_probability: float = Field(ge=0, le=1)
     risk: Literal["LOW", "HIGH"]
     threshold: float = Field(ge=0, le=1)
+    anomaly_score: float
+    is_anomaly: bool
+    anomaly_model_name: str
 
 
 class ModelInfoResponse(BaseModel):
@@ -33,6 +36,9 @@ class StoredPredictionResponse(PredictionResponse):
 
 
 class PredictionHistoryItem(PredictionResponse):
+    anomaly_score: float | None = None
+    is_anomaly: bool | None = None
+    anomaly_model_name: str | None = None
     prediction_id: int
     sensor_reading_id: int
     equipment_id: int

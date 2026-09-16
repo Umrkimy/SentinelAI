@@ -28,6 +28,12 @@ def test_predict_high_risk() -> None:
     assert response.status_code == 200
     assert response.json()["risk"] == "HIGH"
     assert response.json()["failure_probability"] >= 0.5
+    assert isinstance(response.json()["anomaly_score"], float)
+    assert isinstance(response.json()["is_anomaly"], bool)
+    assert (
+        response.json()["anomaly_model_name"]
+        == "Isolation Forest healthy-baseline v1"
+    )
 
 
 def test_predict_rejects_missing_input() -> None:

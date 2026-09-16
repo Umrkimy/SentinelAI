@@ -21,6 +21,9 @@ export type PredictionHistoryItem = {
   failure_probability: number;
   risk: "LOW" | "HIGH";
   threshold: number;
+  anomaly_score: number | null;
+  is_anomaly: boolean | null;
+  anomaly_model_name: string | null;
   recorded_at: string;
   air_temperature_k: number;
   process_temperature_k: number;
@@ -41,6 +44,9 @@ export type StoredPrediction = {
   failure_probability: number;
   risk: "LOW" | "HIGH";
   threshold: number;
+  anomaly_score: number;
+  is_anomaly: boolean;
+  anomaly_model_name: string;
   prediction_id: number;
   sensor_reading_id: number;
   equipment_id: number;
