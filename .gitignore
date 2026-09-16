@@ -9,6 +9,19 @@ __pycache__/
 # Jupyter temporary files
 .ipynb_checkpoints/
 
+# Test, coverage, and static-analysis caches
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# Local environment variables and editor settings
+.env
+.env.*
+!.env.example
+.vscode/
+
 # Local learning notes and Codex instructions
 AGENTS.md
 md/
