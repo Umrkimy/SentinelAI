@@ -21,6 +21,18 @@ htmlcov/
 .env.*
 !.env.example
 .vscode/
+.idea/
+
+# Future Next.js frontend build and dependency artifacts
+node_modules/
+.next/
+.turbo/
+out/
+
+# Local logs and database files
+*.log
+*.sqlite3
+*.db
 
 # Local learning notes and Codex instructions
 AGENTS.md
