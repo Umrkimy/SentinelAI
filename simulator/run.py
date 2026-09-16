@@ -1,14 +1,13 @@
 import argparse
-import time
+from time import sleep
 
-import httpx
-
+from simulator.mqtt_publisher import TelemetryPublisher
 from simulator.telemetry import TelemetryGenerator
 
 
-def main() -> None:
+def parse_arguments() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Send synthetic telemetry to SentinelAI."
+        description="Send synthetic machine telemetry through MQTT."
     )
     parser.add_argument("--equipment-id", type=int, required=True)
     parser.add_argument(
@@ -17,34 +16,43 @@ def main() -> None:
         default="healthy",
     )
     parser.add_argument("--count", type=int, default=10)
-    parser.add_argument("--interval", type=float, default=1.0)
-    parser.add_argument(
-        "--api-url",
-        default="http://127.0.0.1:8000",
-    )
-    args = parser.parse_args()
+    parser.add_argument("--interval", type=float, default=1)
+    parser.add_argument("--mqtt-host", default="127.0.0.1")
+    parser.add_argument("--mqtt-port", type=int, default=1883)
+    return parser.parse_args()
+
+
+def main() -> None:
+    args = parse_arguments()
 
     generator = TelemetryGenerator(seed=42)
+    publisher = TelemetryPublisher(
+        host=args.mqtt_host,
+        port=args.mqtt_port,
+    )
+    device_id = f"simulator-equipment-{args.equipment_id}"
 
-    with httpx.Client(timeout=10.0) as client:
+    publisher.connect()
+
+    try:
         for step in range(args.count):
             reading = generator.generate(mode=args.mode, step=step)
-
-            response = client.post(
-                f"{args.api_url}/equipment/{args.equipment_id}/predict",
-                json=reading.to_payload(),
+            topic = publisher.publish(
+                equipment_id=args.equipment_id,
+                device_id=device_id,
+                sequence_number=step + 1,
+                sensor_values=reading.to_payload(),
             )
-            response.raise_for_status()
 
-            prediction = response.json()
             print(
-                f"step={step + 1}/{args.count} "
-                f"risk={prediction['risk']} "
-                f"probability={prediction['failure_probability']:.2%}"
+                f"Step {step + 1}: published {args.mode} telemetry "
+                f"to {topic}"
             )
 
             if step < args.count - 1:
-                time.sleep(args.interval)
+                sleep(args.interval)
+    finally:
+        publisher.disconnect()
 
 
 if __name__ == "__main__":

@@ -16,6 +16,13 @@ services:
       timeout: 5s
       retries: 5
 
+  mqtt:
+    image: eclipse-mosquitto:2
+    ports:
+      - "1883:1883"
+    volumes:
+      - ./infrastructure/mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+
   backend:
     build:
       context: .
@@ -38,6 +45,21 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
+  gateway:
+    build:
+      context: .
+      dockerfile: gateway/Dockerfile
+    environment:
+      MQTT_HOST: mqtt
+      MQTT_PORT: 1883
+      BACKEND_URL: http://backend:8000
+    depends_on:
+      mqtt:
+        condition: service_started
+      backend:
+        condition: service_healthy
+    restart: on-failure
 
   frontend:
     build:
