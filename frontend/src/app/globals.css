@@ -21,7 +21,7 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-geist-sans), Arial, sans-serif;
-  font-size: 13px;
+  font-size: 16px;
   -webkit-font-smoothing: antialiased;
 }
 button,
@@ -67,7 +67,7 @@ p {
   margin: 0;
 }
 h2 {
-  font-size: 15px;
+  font-size: 20px;
   font-weight: 650;
   letter-spacing: -0.3px;
 }
@@ -86,7 +86,7 @@ select {
   inset: 0 auto 0 0;
   display: flex;
   flex-direction: column;
-  padding: 30px 17px 0;
+  padding: 30px 17px;
 }
 .brand {
   display: flex;
@@ -95,7 +95,8 @@ select {
   font-weight: 650;
   color: #fff;
   letter-spacing: -1px;
-  padding: 0 12px;
+  padding: 0 4px;
+  margin-bottom: 32px;
 }
 .brand-symbol {
   width: 33px;
@@ -110,6 +111,10 @@ select {
 .brand-ai {
   color: #a9d0c1;
   font-weight: 400;
+}
+.sidebar-nav {
+  border-top: 1px solid #35403c;
+  padding-top: 18px;
 }
 .workspace {
   margin: 35px 0 30px;
@@ -278,30 +283,12 @@ select {
   margin: auto;
   padding: 33px 36px 20px;
 }
-.page-heading {
+.page-actions {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   gap: 18px;
-  margin-bottom: 27px;
-}
-.eyebrow {
-  font-size: 9px;
-  letter-spacing: 1.7px;
-  color: #77827d;
-  font-weight: 650;
-  margin-bottom: 8px;
-}
-h1 {
-  font-size: 28px;
-  line-height: 1.3;
-  letter-spacing: -1px;
-  font-weight: 620;
-}
-.page-heading p:not(.eyebrow) {
-  color: var(--muted);
-  font-size: 12px;
-  margin-top: 9px;
+  margin-bottom: 24px;
 }
 .heading-actions {
   display: flex;
@@ -314,7 +301,7 @@ h1 {
   gap: 8px;
   padding: 10px 13px;
   border-radius: 5px;
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 550;
   white-space: nowrap;
   min-height: 36px;
@@ -373,7 +360,7 @@ h1 {
   justify-content: space-between;
   gap: 10px;
   align-items: center;
-  font-size: 11px;
+  font-size: 14px;
   color: #647068;
 }
 .stat-label svg {
@@ -395,7 +382,7 @@ h1 {
   font-weight: 400;
 }
 .stat p {
-  font-size: 10px;
+  font-size: 13px;
   color: #808980;
   margin-top: 8px;
   line-height: 1.4;
@@ -424,7 +411,7 @@ h1 {
 }
 .panel-heading p {
   color: var(--muted);
-  font-size: 11px;
+  font-size: 14px;
   margin-top: 6px;
   line-height: 1.6;
 }
@@ -470,7 +457,7 @@ h1 {
   width: 100%;
   height: 35px;
   min-width: 0;
-  font-size: 11px;
+  font-size: 14px;
   outline-offset: 0;
 }
 .search button {
@@ -492,7 +479,7 @@ h1 {
   border: 0;
   background: transparent;
   height: 35px;
-  font-size: 11px;
+  font-size: 14px;
   padding-right: 4px;
 }
 .table-scroll {
@@ -503,7 +490,7 @@ table {
   text-align: left;
   width: 100%;
   white-space: nowrap;
-  font-size: 11px;
+  font-size: 14px;
 }
 th {
   position: relative;
@@ -513,7 +500,7 @@ th {
   border-bottom: 1px solid var(--line);
   font-weight: 500;
   color: #78827c;
-  font-size: 10px;
+  font-size: 12px;
   padding: 0 23px;
 }
 td {
@@ -553,7 +540,7 @@ tbody tr:hover {
   text-align: left;
   font-weight: 650;
   color: #2e3d35;
-  font-size: 11px;
+  font-size: 14px;
 }
 .asset-icon {
   display: grid;
@@ -567,7 +554,7 @@ tbody tr:hover {
 }
 .asset-button small {
   display: block;
-  font-size: 9px;
+  font-size: 12px;
   margin-top: 4px;
   color: #8b948e;
   font-weight: 400;
@@ -582,7 +569,7 @@ tbody tr:hover {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 9px;
+  font-size: 12px;
   font-weight: 500;
   padding: 4px 7px;
   border-radius: 4px;
@@ -607,7 +594,7 @@ tbody tr:hover {
   border: 0;
   background: none;
   color: #7a8680;
-  font-size: 10px;
+  font-size: 13px;
   margin-left: auto;
 }
 .row-action.chosen {
@@ -620,7 +607,7 @@ tbody tr:hover {
   gap: 15px;
   padding: 12px 23px;
   border-top: 1px solid var(--line);
-  font-size: 10px;
+  font-size: 13px;
   color: #7d8780;
 }
 .pagination {
@@ -646,17 +633,17 @@ tbody tr:hover {
   margin: 30px 0 16px;
 }
 .section-heading h2 {
-  font-size: 19px;
+  font-size: 22px;
 }
 .heading-detail {
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 400;
   color: #7d8880;
   margin-left: 12px;
   letter-spacing: 0;
 }
 .asset-select {
-  font-size: 9px;
+  font-size: 13px;
   color: #78857c;
   display: flex;
   align-items: center;
@@ -667,7 +654,7 @@ tbody tr:hover {
   background: #fff;
   border-radius: 5px;
   padding: 9px 12px;
-  font-size: 11px;
+  font-size: 14px;
   min-width: 155px;
 }
 .assessment-grid {
@@ -692,7 +679,7 @@ fieldset {
 }
 form label {
   display: block;
-  font-size: 10px;
+  font-size: 13px;
   color: #58655d;
   font-weight: 500;
 }
@@ -716,12 +703,12 @@ form label {
   border: 0;
   outline: none !important;
   padding: 9px 11px;
-  font-size: 12px;
+  font-size: 15px;
   font-variant-numeric: tabular-nums;
   background: transparent;
 }
 .input-unit > span {
-  font-size: 10px;
+  font-size: 12px;
   color: #89948c;
   padding: 0 11px;
   border-left: 1px solid #edf0ed;
@@ -742,7 +729,7 @@ fieldset:disabled {
   padding-top: 18px;
 }
 .form-bottom p {
-  font-size: 10px;
+  font-size: 13px;
   color: #7e8981;
   line-height: 1.6;
   max-width: 190px;
@@ -764,7 +751,7 @@ fieldset:disabled {
 }
 .muted {
   color: #849087;
-  font-size: 10px;
+  font-size: 13px;
 }
 .probability-track {
   height: 6px;
@@ -799,7 +786,7 @@ fieldset:disabled {
 }
 .signal-details {
   margin: 21px 0 0;
-  font-size: 10px;
+  font-size: 13px;
 }
 .signal-details > div {
   display: flex;
@@ -820,7 +807,7 @@ fieldset:disabled {
   display: flex;
   align-items: flex-start;
   gap: 8px;
-  font-size: 9px;
+  font-size: 12px;
   color: #7d8880;
   line-height: 1.6;
   margin-top: 14px;
@@ -861,7 +848,7 @@ fieldset:disabled {
   gap: 20px;
   margin-top: 25px;
   color: #8d9790;
-  font-size: 9px;
+  font-size: 12px;
   line-height: 1.7;
 }
 .page-footer > span:first-child {
@@ -918,7 +905,7 @@ fieldset:disabled {
   color: #376d50;
   border-radius: 5px;
   margin-bottom: 20px;
-  font-size: 11px;
+  font-size: 14px;
 }
 .notice .icon-button {
   margin-left: auto;
@@ -931,7 +918,7 @@ fieldset:disabled {
 }
 .error-banner p {
   margin-top: 5px;
-  font-size: 11px;
+  font-size: 13px;
 }
 .registration-dialog {
   border: 1px solid #dce2de;
@@ -956,7 +943,7 @@ fieldset:disabled {
   font-size: 23px;
 }
 .form-intro {
-  font-size: 12px;
+  font-size: 14px;
   color: var(--muted);
   line-height: 1.7;
   margin-top: 9px;
@@ -975,7 +962,7 @@ fieldset:disabled {
   height: 40px;
   padding: 10px;
   margin-top: 7px;
-  font-size: 12px;
+  font-size: 15px;
 }
 .registration-form > .button {
   width: 100%;
@@ -994,7 +981,7 @@ fieldset:disabled {
   color: #a44836;
   padding: 11px;
   border-radius: 4px;
-  font-size: 11px;
+  font-size: 13px;
   margin-top: 13px;
   line-height: 1.6;
 }
@@ -1006,7 +993,7 @@ fieldset:disabled {
   border-radius: 4px;
   background: #eaf5ee;
   color: #286a4c;
-  font-size: 10px;
+  font-size: 13px;
   margin-top: 15px;
 }
 .result-high {
@@ -1339,6 +1326,49 @@ fieldset:disabled {
     padding: 0 16px 18px;
   }
 }
+/* Readability pass: operations data should be easy to scan at normal zoom. */
+.nav-item {
+  font-size: 14px;
+}
+.nav-count,
+.connection {
+  font-size: 12px;
+}
+.stat p,
+.panel-heading p,
+.form-bottom p,
+.muted,
+.signal-details,
+.page-footer,
+.empty-state p,
+.form-intro,
+.form-error,
+.result-message {
+  font-size: 14px;
+}
+.search input,
+.filter select,
+.asset-select,
+.asset-select select,
+.row-action,
+.table-footer,
+.signal-note {
+  font-size: 14px;
+}
+table {
+  font-size: 15px;
+}
+th {
+  font-size: 13px;
+}
+.asset-button {
+  font-size: 15px;
+}
+.asset-button small,
+.badge {
+  font-size: 13px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
