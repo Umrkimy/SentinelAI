@@ -16,6 +16,10 @@ htmlcov/
 .mypy_cache/
 .ruff_cache/
 
+# Local browser-automation artifacts
+.playwright-cli/
+output/
+
 # Local environment variables and editor settings
 .env
 .env.*
