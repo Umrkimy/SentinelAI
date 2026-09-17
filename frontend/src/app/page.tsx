@@ -5,8 +5,7 @@ import { ShieldCheck, X } from "lucide-react";
 import { AppSidebar, type DashboardView } from "@/components/app-sidebar";
 import { AssessmentWorkspace } from "@/components/assessment-workspace";
 import { DashboardHeader } from "@/components/dashboard-header";
-import { DocumentSearchPanel } from "@/components/document-search-panel";
-import { DocumentAdminPanel } from "@/components/document-admin-panel";
+import { DocumentWorkspace } from "@/components/document-workspace";
 import { EquipmentForm } from "@/components/equipment-form";
 import { EquipmentRegistry } from "@/components/equipment-registry";
 import { EquipmentSummary } from "@/components/equipment-summary";
@@ -196,7 +195,7 @@ export default function Home() {
               onPredictionCreated={refreshHistory}
             />
           )}
-          {view === "documents" && <><DocumentSearchPanel /><DocumentAdminPanel /></>}
+          {view === "documents" && <DocumentWorkspace />}
           <footer className="page-footer">
             <span>
               <ShieldCheck size={15} />
