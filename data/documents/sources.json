@@ -1,0 +1,20 @@
+{
+  "sources": [
+    {
+      "id": "nasa-rcm-guide",
+      "title": "NASA Reliability-Centered Maintenance Guide",
+      "publisher": "NASA",
+      "source_url": "https://www.nasa.gov/wp-content/uploads/2023/02/nasa_rcmguide.pdf",
+      "local_file": "raw/nasa_rcmguide.pdf",
+      "purpose": "Predictive maintenance, condition monitoring, failure planning"
+    },
+    {
+      "id": "osha-lockout-tagout",
+      "title": "Control of Hazardous Energy: Lockout/Tagout",
+      "publisher": "OSHA",
+      "source_url": "https://www.osha.gov/Publications/osha3120.pdf",
+      "local_file": "raw/OSHA3120.pdf",
+      "purpose": "Safety context for equipment servicing and maintenance"
+    }
+  ]
+}

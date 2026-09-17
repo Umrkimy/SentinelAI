@@ -5,6 +5,8 @@ import { ShieldCheck, X } from "lucide-react";
 import { AppSidebar, type DashboardView } from "@/components/app-sidebar";
 import { AssessmentWorkspace } from "@/components/assessment-workspace";
 import { DashboardHeader } from "@/components/dashboard-header";
+import { DocumentSearchPanel } from "@/components/document-search-panel";
+import { DocumentAdminPanel } from "@/components/document-admin-panel";
 import { EquipmentForm } from "@/components/equipment-form";
 import { EquipmentRegistry } from "@/components/equipment-registry";
 import { EquipmentSummary } from "@/components/equipment-summary";
@@ -34,8 +36,10 @@ export default function Home() {
 
   const selected = equipment.find((item) => item.id === selectedId);
   const history = historyState.id === selectedId ? historyState.data : [];
-  const historyError = historyState.id === selectedId ? historyState.error : null;
-  const waiting = historyLoading || (selectedId !== null && historyState.id !== selectedId);
+  const historyError =
+    historyState.id === selectedId ? historyState.error : null;
+  const waiting =
+    historyLoading || (selectedId !== null && historyState.id !== selectedId);
 
   useEffect(() => {
     let active = true;
@@ -107,8 +111,14 @@ export default function Home() {
 
   return (
     <div className="app-shell">
-      <a className="skip-link" href="#main">Skip to content</a>
-      <AppSidebar activeView={view} equipmentCount={equipment.length} onViewChange={setView} />
+      <a className="skip-link" href="#main">
+        Skip to content
+      </a>
+      <AppSidebar
+        activeView={view}
+        equipmentCount={equipment.length}
+        onViewChange={setView}
+      />
       <div className="main-shell">
         <DashboardHeader
           loading={loading}
@@ -122,7 +132,11 @@ export default function Home() {
             <div className="notice" role="status">
               <ShieldCheck size={17} />
               {notice}
-              <button className="icon-button" aria-label="Dismiss notification" onClick={() => setNotice("")}>
+              <button
+                className="icon-button"
+                aria-label="Dismiss notification"
+                onClick={() => setNotice("")}
+              >
                 <X size={16} />
               </button>
             </div>
@@ -131,9 +145,20 @@ export default function Home() {
             <div className="error-banner" role="alert">
               <div>
                 <strong>Equipment could not be refreshed</strong>
-                <p>{equipmentError} {equipment.length ? "Previously loaded equipment is shown." : "Check your API connection and try again."}</p>
+                <p>
+                  {equipmentError}{" "}
+                  {equipment.length
+                    ? "Previously loaded equipment is shown."
+                    : "Check your API connection and try again."}
+                </p>
               </div>
-              <button className="button secondary" onClick={refreshData} disabled={loading}>Try again</button>
+              <button
+                className="button secondary"
+                onClick={refreshData}
+                disabled={loading}
+              >
+                Try again
+              </button>
             </div>
           )}
           {view === "overview" && (
@@ -148,7 +173,7 @@ export default function Home() {
               historyError={historyError}
             />
           )}
-          {view !== "assessments" && (
+          {(view === "overview" || view === "equipment") && (
             <EquipmentRegistry
               equipment={equipment}
               selectedId={selectedId}
@@ -158,7 +183,7 @@ export default function Home() {
               onRegister={() => dialog.current?.showModal()}
             />
           )}
-          {view !== "equipment" && (
+          {(view === "overview" || view === "assessments") && (
             <AssessmentWorkspace
               equipment={equipment}
               selected={selected}
@@ -171,14 +196,27 @@ export default function Home() {
               onPredictionCreated={refreshHistory}
             />
           )}
+          {view === "documents" && <><DocumentSearchPanel /><DocumentAdminPanel /></>}
           <footer className="page-footer">
-            <span><ShieldCheck size={15} />Decision support for qualified engineers. Assessments do not replace inspection.</span>
+            <span>
+              <ShieldCheck size={15} />
+              Decision support for qualified engineers. Assessments do not
+              replace inspection.
+            </span>
           </footer>
         </main>
       </div>
-      <dialog ref={dialog} className="registration-dialog" aria-labelledby="register-title">
+      <dialog
+        ref={dialog}
+        className="registration-dialog"
+        aria-labelledby="register-title"
+      >
         <div className="dialog-heading">
-          <button className="icon-button" aria-label="Close registration" onClick={() => dialog.current?.close()}>
+          <button
+            className="icon-button"
+            aria-label="Close registration"
+            onClick={() => dialog.current?.close()}
+          >
             <X size={20} />
           </button>
         </div>
@@ -186,7 +224,9 @@ export default function Home() {
           onEquipmentCreated={(item) => {
             setEquipment((items) => [...items, item]);
             selectAsset(item.id);
-            setNotice(`${item.asset_tag} registered. You can now run its first assessment.`);
+            setNotice(
+              `${item.asset_tag} registered. You can now run its first assessment.`,
+            );
             dialog.current?.close();
           }}
         />

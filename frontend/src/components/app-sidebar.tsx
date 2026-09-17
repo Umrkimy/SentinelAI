@@ -1,14 +1,19 @@
 "use client";
 
 import Link from "next/link";
-import { Activity, Box, LayoutDashboard } from "lucide-react";
+import { Activity, BookOpen, Box, LayoutDashboard } from "lucide-react";
 
-export type DashboardView = "overview" | "equipment" | "assessments";
+export type DashboardView =
+  | "overview"
+  | "equipment"
+  | "assessments"
+  | "documents";
 
 const navigation = [
   { id: "overview", label: "Overview", icon: LayoutDashboard },
   { id: "equipment", label: "Equipment", icon: Box },
   { id: "assessments", label: "Assessments", icon: Activity },
+  { id: "documents", label: "Documents", icon: BookOpen },
 ] as const;
 
 export function AppSidebar({

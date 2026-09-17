@@ -64,11 +64,108 @@ export type StoredPrediction = {
   rul_training_data_note: string | null;
 };
 
+export type DocumentSearchResult = {
+  source_id: string;
+  title: string;
+  source_url: string | null;
+  page_number: number;
+  chunk_number: number;
+  text: string;
+  similarity_score: number;
+};
+
+export type DocumentSearchResponse = {
+  query: string;
+  results: DocumentSearchResult[];
+};
+
+export type AdminToken = {
+  access_token: string;
+  token_type: "bearer";
+  expires_in: number;
+};
+
+export type UploadedDocument = {
+  id: number;
+  source_id: string;
+  title: string;
+  publisher: string | null;
+  purpose: string;
+  original_filename: string;
+  file_size_bytes: number;
+  status: string;
+  uploaded_by: string;
+  created_at: string;
+};
+
+export function searchDocuments(
+  query: string,
+  topK = 5,
+): Promise<DocumentSearchResponse> {
+  return apiRequest<DocumentSearchResponse>(
+    "/documents/search",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        query,
+        top_k: topK,
+      }),
+    },
+    180_000,
+  );
+}
+
+export function loginAdmin(
+  username: string,
+  password: string,
+): Promise<AdminToken> {
+  const body = new URLSearchParams({ username, password });
+  return apiRequest<AdminToken>("/auth/token", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body,
+  });
+}
+
+export function getUploadedDocuments(token: string): Promise<UploadedDocument[]> {
+  return apiRequest<UploadedDocument[]>("/documents/admin", {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+}
+
+export function uploadDocument(
+  token: string,
+  values: {
+    file: File;
+    sourceId: string;
+    title: string;
+    publisher: string;
+    purpose: string;
+  },
+): Promise<UploadedDocument> {
+  const form = new FormData();
+  form.set("file", values.file);
+  form.set("source_id", values.sourceId);
+  form.set("title", values.title);
+  form.set("publisher", values.publisher);
+  form.set("purpose", values.purpose);
+
+  return apiRequest<UploadedDocument>("/documents/admin/upload", {
+    method: "POST",
+    headers: { Authorization: `Bearer ${token}` },
+    body: form,
+  });
+}
+
 const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 async function apiRequest<T>(
   path: string,
   options: RequestInit = {},
+  timeoutMs = 20_000,
 ): Promise<T> {
   if (!apiBaseUrl) {
     throw new Error("NEXT_PUBLIC_API_BASE_URL is not configured.");
@@ -78,7 +175,7 @@ async function apiRequest<T>(
   try {
     response = await fetch(`${apiBaseUrl.replace(/\/$/, "")}${path}`, {
       ...options,
-      signal: AbortSignal.timeout(20000),
+      signal: AbortSignal.timeout(timeoutMs),
     });
   } catch {
     throw new Error(
@@ -87,6 +184,12 @@ async function apiRequest<T>(
   }
 
   if (!response.ok) {
+    const payload = await response.json().catch(() => null);
+    const detail =
+      payload && typeof payload.detail === "string" ? payload.detail : null;
+    if (response.status === 401) {
+      throw new Error("Admin session expired. Sign in again.");
+    }
     if (response.status === 409) {
       throw new Error(
         "This asset tag is already registered. Use a unique asset tag.",
@@ -98,7 +201,7 @@ async function apiRequest<T>(
       );
     }
     throw new Error(
-      `The request could not be completed (${response.status}). Please try again.`,
+      detail ?? `The request could not be completed (${response.status}). Please try again.`,
     );
   }
 

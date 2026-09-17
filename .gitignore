@@ -42,3 +42,8 @@ out/
 AGENTS.md
 md/
 guide/
+
+# Local reference documents for RAG
+data/documents/raw/
+data/documents/processed/
+data/documents/uploads/

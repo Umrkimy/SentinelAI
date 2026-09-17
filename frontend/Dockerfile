@@ -2,15 +2,15 @@ FROM node:22-alpine AS base
 
 FROM base AS dependencies
 WORKDIR /app
-COPY frontend/package.json frontend/package-lock.json ./
-RUN npm ci
+COPY package.json package-lock.json ./
+RUN --mount=type=cache,target=/root/.npm npm ci
 
 FROM base AS builder
 WORKDIR /app
 ARG NEXT_PUBLIC_API_BASE_URL
 ENV NEXT_PUBLIC_API_BASE_URL=$NEXT_PUBLIC_API_BASE_URL
 COPY --from=dependencies /app/node_modules ./node_modules
-COPY frontend/ .
+COPY . .
 RUN npm run build
 
 FROM base AS runner

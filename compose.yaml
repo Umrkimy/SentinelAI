@@ -29,6 +29,14 @@ services:
       dockerfile: backend/Dockerfile
     environment:
       DATABASE_URL: postgresql+psycopg://sentinelai:${POSTGRES_PASSWORD}@postgres:5432/sentinelai
+      SENTINELAI_ADMIN_USERNAME: ${SENTINELAI_ADMIN_USERNAME}
+      SENTINELAI_ADMIN_PASSWORD_HASH: ${SENTINELAI_ADMIN_PASSWORD_HASH}
+      SENTINELAI_JWT_SECRET: ${SENTINELAI_JWT_SECRET}
+    volumes:
+      - ./data/documents/raw:/app/data/documents/raw:ro
+      - ./data/documents/sources.json:/app/data/documents/sources.json:ro
+      - ./data/documents/processed:/app/data/documents/processed
+      - ./data/documents/uploads:/app/data/documents/uploads
     ports:
       - "8000:8000"
     depends_on:
@@ -63,8 +71,8 @@ services:
 
   frontend:
     build:
-      context: .
-      dockerfile: frontend/Dockerfile
+      context: ./frontend
+      dockerfile: Dockerfile
       args:
         NEXT_PUBLIC_API_BASE_URL: http://localhost:8000
     ports:

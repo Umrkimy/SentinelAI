@@ -9,6 +9,7 @@ from backend.app.db.session import Base, DATABASE_URL
 import backend.app.models.equipment
 import backend.app.models.prediction
 import backend.app.models.sensor_reading
+import backend.app.models.document
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
