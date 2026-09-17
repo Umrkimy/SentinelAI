@@ -485,6 +485,11 @@ select {
 }
 .table-scroll {
   overflow: auto;
+  scrollbar-color: #c4d0c9 transparent;
+  scrollbar-width: thin;
+}
+.data-table {
+  min-width: 760px;
 }
 table {
   border-collapse: collapse;
@@ -1308,11 +1313,18 @@ fieldset:disabled {
     padding: 9px;
   }
   .table-footer {
+    flex-direction: column;
+    align-items: flex-start;
     padding: 11px 16px;
-    font-size: 9px;
+    font-size: 12px;
   }
   .pagination {
     gap: 7px;
+  }
+  .data-table th,
+  .data-table td {
+    padding-left: 16px;
+    padding-right: 16px;
   }
   .page-footer {
     font-size: 8px;

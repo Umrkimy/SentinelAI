@@ -1,6 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import {
+  flexRender,
+  getCoreRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  useReactTable,
+  type ColumnDef,
+  type SortingState,
+} from "@tanstack/react-table";
 import {
   Activity,
   ChevronLeft,
@@ -44,14 +53,39 @@ export function AssessmentWorkspace({
   onRefresh: () => void;
   onPredictionCreated: () => void;
 }) {
-  const [historyPage, setHistoryPage] = useState(0);
+  const [sorting, setSorting] = useState<SortingState>([
+    { id: "recorded_at", desc: true },
+  ]);
   const latest = history[0];
-  const historyCurrentPage = Math.min(
-    historyPage,
-    Math.max(0, Math.ceil(history.length / PAGE_SIZE) - 1),
+  const columns = useMemo<ColumnDef<PredictionHistoryItem>[]>(
+    () => [
+      { accessorKey: "recorded_at", header: "Recorded", cell: ({ row }) => <span className="numeric">{formatDate(row.original.recorded_at)}</span> },
+      {
+        accessorKey: "failure_probability", header: "Failure probability",
+        cell: ({ row }) => <div className="probability-cell"><span className="numeric">{(row.original.failure_probability * 100).toFixed(2)}%</span><span className="mini-track"><i className={row.original.risk === "HIGH" ? "high" : "low"} style={{ width: `${row.original.failure_probability * 100}%` }} /></span></div>,
+      },
+      { accessorKey: "risk", header: "Risk signal", cell: ({ row }) => <span className={`badge ${row.original.risk === "HIGH" ? "danger" : "positive"}`}><i />{row.original.risk === "HIGH" ? "High risk" : "Low risk"}</span> },
+      { id: "baseline", header: "Baseline signal", accessorFn: (item) => item.is_anomaly === null ? "Not available" : item.is_anomaly ? "Unusual" : "Within baseline", cell: ({ row }) => <span className={`badge ${row.original.is_anomaly === null ? "" : row.original.is_anomaly ? "danger" : "positive"}`}><i />{row.original.is_anomaly === null ? "Not available" : row.original.is_anomaly ? "Unusual" : "Within baseline"}</span> },
+      { accessorKey: "conservative_rul_cycles", header: "Planning RUL", cell: ({ row }) => <span className="numeric">{row.original.conservative_rul_cycles === null ? "Not available" : `${row.original.conservative_rul_cycles.toFixed(0)} cycles`}</span> },
+      { accessorKey: "rotational_speed_rpm", header: "Speed", cell: ({ row }) => <span className="numeric">{row.original.rotational_speed_rpm.toLocaleString()} <span className="muted">rpm</span></span> },
+      { accessorKey: "torque_nm", header: "Torque", cell: ({ row }) => <span className="numeric">{row.original.torque_nm} <span className="muted">Nm</span></span> },
+      { accessorKey: "tool_wear_min", header: "Tool wear", cell: ({ row }) => <span className="numeric">{row.original.tool_wear_min} <span className="muted">min</span></span> },
+    ],
+    [],
   );
+  const table = useReactTable({
+    data: history,
+    columns,
+    state: { sorting },
+    onSortingChange: setSorting,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    initialState: { pagination: { pageSize: PAGE_SIZE } },
+  });
+  const paginatedHistory = table.getRowModel().rows.map((row) => row.original);
 
-  useEffect(() => setHistoryPage(0), [selectedId]);
+  useEffect(() => table.setPageIndex(0), [selectedId, table]);
 
   function exportHistory() {
     const rows = [
@@ -153,7 +187,7 @@ export function AssessmentWorkspace({
           key={selectedId ?? "none"}
           equipmentId={selectedId}
           onPredictionCreated={() => {
-            setHistoryPage(0);
+            table.setPageIndex(0);
             onPredictionCreated();
           }}
         />
@@ -294,27 +328,26 @@ export function AssessmentWorkspace({
           </button>
         </div>
         <div className="table-scroll">
-          <table>
+          <table className="data-table">
             <thead>
-              <tr>
-                <th>Recorded</th>
-                <th>Failure probability</th>
-                <th>Risk signal</th>
-                <th>Baseline signal</th>
-                <th>Planning RUL</th>
-                <th>Speed</th>
-                <th>Torque</th>
-                <th>Tool wear</th>
-              </tr>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <tr key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => (
+                    <th key={header.id} aria-sort={header.column.getIsSorted() === "asc" ? "ascending" : header.column.getIsSorted() === "desc" ? "descending" : undefined}>
+                      {header.column.getCanSort() ? (
+                        <button className="sort-button" onClick={header.column.getToggleSortingHandler()}>
+                          {flexRender(header.column.columnDef.header, header.getContext())}
+                          <span aria-hidden="true">{header.column.getIsSorted() === "desc" ? "↓" : header.column.getIsSorted() === "asc" ? "↑" : "↕"}</span>
+                        </button>
+                      ) : flexRender(header.column.columnDef.header, header.getContext())}
+                    </th>
+                  ))}
+                </tr>
+              ))}
             </thead>
             <tbody>
               {!waiting &&
-                history
-                  .slice(
-                    historyCurrentPage * PAGE_SIZE,
-                    (historyCurrentPage + 1) * PAGE_SIZE,
-                  )
-                  .map((item) => (
+                paginatedHistory.map((item) => (
                     <tr key={item.prediction_id}>
                       <td className="numeric">
                         {formatDate(item.recorded_at)}
@@ -406,19 +439,19 @@ export function AssessmentWorkspace({
           <div className="pagination">
             <button
               aria-label="Previous history page"
-              disabled={historyCurrentPage === 0}
-              onClick={() => setHistoryPage(historyCurrentPage - 1)}
+              disabled={!table.getCanPreviousPage()}
+              onClick={() => table.previousPage()}
             >
               <ChevronLeft size={16} />
             </button>
             <span>
-              Page {historyCurrentPage + 1} of{" "}
-              {Math.max(1, Math.ceil(history.length / PAGE_SIZE))}
+              Page {table.getState().pagination.pageIndex + 1} of{" "}
+              {Math.max(1, table.getPageCount())}
             </span>
             <button
               aria-label="Next history page"
-              disabled={(historyCurrentPage + 1) * PAGE_SIZE >= history.length}
-              onClick={() => setHistoryPage(historyCurrentPage + 1)}
+              disabled={!table.getCanNextPage()}
+              onClick={() => table.nextPage()}
             >
               <ChevronRight size={16} />
             </button>
