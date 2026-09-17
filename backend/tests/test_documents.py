@@ -160,6 +160,22 @@ def test_document_upload_requires_an_admin_token(client: TestClient) -> None:
     assert response.status_code == 401
 
 
+def test_document_admin_cors_allows_bearer_token_header(
+    client: TestClient,
+) -> None:
+    response = client.options(
+        "/documents/admin",
+        headers={
+            "Origin": "http://localhost:3500",
+            "Access-Control-Request-Method": "GET",
+            "Access-Control-Request-Headers": "authorization",
+        },
+    )
+
+    assert response.status_code == 200
+    assert "Authorization" in response.headers["access-control-allow-headers"]
+
+
 def test_admin_can_upload_list_and_deduplicate_documents(
     client: TestClient,
     monkeypatch,
