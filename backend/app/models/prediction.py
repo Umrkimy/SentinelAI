@@ -29,6 +29,22 @@ class Prediction(Base):
         String(100),
         nullable=True,
     )
+    predicted_rul_cycles: Mapped[float | None] = mapped_column(
+        Float,
+        nullable=True,
+    )
+    conservative_rul_cycles: Mapped[float | None] = mapped_column(
+        Float,
+        nullable=True,
+    )
+    rul_model_name: Mapped[str | None] = mapped_column(
+        String(100),
+        nullable=True,
+    )
+    rul_training_data_note: Mapped[str | None] = mapped_column(
+        String(200),
+        nullable=True,
+    )
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         server_default=func.now(),

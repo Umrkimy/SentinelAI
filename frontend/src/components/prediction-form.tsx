@@ -44,6 +44,13 @@ const fields: {
     placeholder: "220",
     min: 0,
   },
+  {
+    name: "operating_cycle",
+    label: "Operating cycle",
+    unit: "cycle",
+    placeholder: "400",
+    min: 1,
+  },
 ];
 
 export function PredictionForm({
@@ -71,7 +78,7 @@ export function PredictionForm({
           !raw.trim() || !Number.isFinite(Number(raw)) || Number(raw) < min,
       )
     ) {
-      setError("Enter a valid reading for every sensor.");
+      setError("Enter valid sensor readings and an operating cycle.");
       return;
     }
     const reading = Object.fromEntries(
@@ -129,8 +136,8 @@ export function PredictionForm({
           <p>
             {equipmentId === null
               ? "Register and select equipment to begin."
-              : "Use measured values. All five readings are required."}
-          </p>
+              : "Use measured values and the current operating cycle."}
+            </p>
           <button
             className="button primary"
             type="submit"
@@ -150,6 +157,9 @@ export function PredictionForm({
               Assessment saved · {result.risk === "HIGH" ? "High" : "Low"} risk
               · {(result.failure_probability * 100).toFixed(2)}% failure
               probability
+              {result.conservative_rul_cycles !== null
+                ? ` · plan within ${result.conservative_rul_cycles.toFixed(0)} cycles`
+                : ""}
             </span>
           </div>
         )}

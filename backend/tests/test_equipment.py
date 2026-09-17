@@ -50,6 +50,7 @@ def test_stored_prediction_appears_in_equipment_history(client: TestClient) -> N
             "rotational_speed_rpm": 1400.0,
             "torque_nm": 65.0,
             "tool_wear_min": 220.0,
+            "operating_cycle": 400,
         },
     )
 
@@ -60,6 +61,8 @@ def test_stored_prediction_appears_in_equipment_history(client: TestClient) -> N
     assert isinstance(prediction["anomaly_score"], float)
     assert isinstance(prediction["is_anomaly"], bool)
     assert prediction["anomaly_model_name"] == "Isolation Forest healthy-baseline v1"
+    assert isinstance(prediction["predicted_rul_cycles"], float)
+    assert isinstance(prediction["conservative_rul_cycles"], float)
 
     history_response = client.get(f"/equipment/{equipment['id']}/predictions")
 
@@ -71,6 +74,8 @@ def test_stored_prediction_appears_in_equipment_history(client: TestClient) -> N
     assert history[0]["torque_nm"] == 65.0
     assert history[0]["anomaly_score"] == prediction["anomaly_score"]
     assert history[0]["is_anomaly"] == prediction["is_anomaly"]
+    assert history[0]["operating_cycle"] == 400
+    assert history[0]["predicted_rul_cycles"] == prediction["predicted_rul_cycles"]
 
 
 def test_prediction_for_unknown_equipment_is_rejected(client: TestClient) -> None:

@@ -84,7 +84,7 @@ class TelemetryGateway:
     @staticmethod
     def validate_message(
         payload: dict[str, Any],
-    ) -> tuple[int, dict[str, float]]:
+    ) -> tuple[int, dict[str, float | int]]:
         missing_fields = [
             field for field in REQUIRED_FIELDS if field not in payload
         ]
@@ -97,6 +97,11 @@ class TelemetryGateway:
             field: float(payload[field])
             for field in SENSOR_FIELDS
         }
+        if "operating_cycle" in payload:
+            operating_cycle = int(payload["operating_cycle"])
+            if operating_cycle < 1:
+                raise ValueError("operating_cycle must be at least 1")
+            sensor_values["operating_cycle"] = operating_cycle
 
         return equipment_id, sensor_values
 

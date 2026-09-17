@@ -9,6 +9,8 @@ def test_healthy_tool_wear_increases_gradually() -> None:
 
     assert first.tool_wear_min == 50
     assert later.tool_wear_min == 55
+    assert first.operating_cycle == 1
+    assert later.operating_cycle == 11
     assert 37 <= first.torque_nm <= 47
 
 

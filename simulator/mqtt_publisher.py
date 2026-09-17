@@ -23,7 +23,7 @@ class TelemetryPublisher:
         equipment_id: int,
         device_id: str,
         sequence_number: int,
-        sensor_values: dict[str, float],
+        sensor_values: dict[str, float | int],
     ) -> str:
         topic = f"sentinelai/telemetry/{equipment_id}"
 

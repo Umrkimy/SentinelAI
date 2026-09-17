@@ -30,6 +30,11 @@ export type PredictionHistoryItem = {
   rotational_speed_rpm: number;
   torque_nm: number;
   tool_wear_min: number;
+  operating_cycle: number | null;
+  predicted_rul_cycles: number | null;
+  conservative_rul_cycles: number | null;
+  rul_model_name: string | null;
+  rul_training_data_note: string | null;
 };
 
 export type SensorReadingInput = {
@@ -38,6 +43,7 @@ export type SensorReadingInput = {
   rotational_speed_rpm: number;
   torque_nm: number;
   tool_wear_min: number;
+  operating_cycle: number;
 };
 
 export type StoredPrediction = {
@@ -52,6 +58,10 @@ export type StoredPrediction = {
   equipment_id: number;
   model_name: string;
   created_at: string;
+  predicted_rul_cycles: number | null;
+  conservative_rul_cycles: number | null;
+  rul_model_name: string | null;
+  rul_training_data_note: string | null;
 };
 
 const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;

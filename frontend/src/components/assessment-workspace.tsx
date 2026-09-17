@@ -64,6 +64,11 @@ export function AssessmentWorkspace({
         "Anomaly score",
         "Healthy-baseline signal",
         "Anomaly model",
+        "Operating cycle",
+        "Predicted RUL (cycles)",
+        "Conservative RUL (cycles)",
+        "RUL model",
+        "RUL data note",
         "Air temperature (K)",
         "Process temperature (K)",
         "Speed (rpm)",
@@ -83,6 +88,11 @@ export function AssessmentWorkspace({
             ? "Unusual reading"
             : "Within learned baseline",
         item.anomaly_model_name ?? "",
+        item.operating_cycle ?? "",
+        item.predicted_rul_cycles ?? "",
+        item.conservative_rul_cycles ?? "",
+        item.rul_model_name ?? "",
+        item.rul_training_data_note ?? "",
         item.air_temperature_k,
         item.process_temperature_k,
         item.rotational_speed_rpm,
@@ -215,6 +225,28 @@ export function AssessmentWorkspace({
                   </dd>
                 </div>
                 <div>
+                  <dt>Predicted remaining life</dt>
+                  <dd>
+                    {latest.predicted_rul_cycles === null
+                      ? "Operating cycle not provided"
+                      : `${latest.predicted_rul_cycles.toFixed(0)} cycles`}
+                  </dd>
+                </div>
+                <div>
+                  <dt>Conservative planning estimate</dt>
+                  <dd>
+                    {latest.conservative_rul_cycles === null
+                      ? "Not available"
+                      : `${latest.conservative_rul_cycles.toFixed(0)} cycles`}
+                  </dd>
+                </div>
+                <div>
+                  <dt>RUL data basis</dt>
+                  <dd>
+                    {latest.rul_training_data_note ?? "Not available"}
+                  </dd>
+                </div>
+                <div>
                   <dt>Recorded</dt>
                   <dd>{formatDate(latest.recorded_at)}</dd>
                 </div>
@@ -269,6 +301,7 @@ export function AssessmentWorkspace({
                 <th>Failure probability</th>
                 <th>Risk signal</th>
                 <th>Baseline signal</th>
+                <th>Planning RUL</th>
                 <th>Speed</th>
                 <th>Torque</th>
                 <th>Tool wear</th>
@@ -328,6 +361,11 @@ export function AssessmentWorkspace({
                         </span>
                       </td>
                       <td className="numeric">
+                        {item.conservative_rul_cycles === null
+                          ? "Not available"
+                          : `${item.conservative_rul_cycles.toFixed(0)} cycles`}
+                      </td>
+                      <td className="numeric">
                         {item.rotational_speed_rpm.toLocaleString()}{" "}
                         <span className="muted">rpm</span>
                       </td>
@@ -341,7 +379,7 @@ export function AssessmentWorkspace({
                   ))}
               {(waiting || !history.length) && (
                 <tr>
-                  <td colSpan={7}>
+                  <td colSpan={8}>
                     <div className="empty-state compact">
                       <strong>
                         {waiting

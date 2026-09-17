@@ -14,6 +14,7 @@ def valid_payload() -> dict[str, object]:
         "rotational_speed_rpm": 1500.0,
         "torque_nm": 42.0,
         "tool_wear_min": 50.0,
+        "operating_cycle": 400,
     }
 
 
@@ -24,7 +25,8 @@ def test_validate_message_returns_equipment_and_sensor_values() -> None:
 
     assert equipment_id == 1
     assert sensor_values["torque_nm"] == 42.0
-    assert len(sensor_values) == 5
+    assert sensor_values["operating_cycle"] == 400
+    assert len(sensor_values) == 6
 
 
 def test_validate_message_rejects_missing_sensor_value() -> None:

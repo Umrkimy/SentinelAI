@@ -22,6 +22,7 @@ def test_predict_high_risk() -> None:
             "rotational_speed_rpm": 1402,
             "torque_nm": 69.7,
             "tool_wear_min": 64,
+            "operating_cycle": 400,
         },
     )
 
@@ -34,6 +35,9 @@ def test_predict_high_risk() -> None:
         response.json()["anomaly_model_name"]
         == "Isolation Forest healthy-baseline v1"
     )
+    assert isinstance(response.json()["predicted_rul_cycles"], float)
+    assert isinstance(response.json()["conservative_rul_cycles"], float)
+    assert response.json()["rul_model_name"] == "Random Forest synthetic-RUL v1"
 
 
 def test_predict_rejects_missing_input() -> None:

@@ -6,3 +6,4 @@ MODEL_PATH = PROJECT_ROOT / "models" / "xgboost_failure_model.joblib"
 ANOMALY_MODEL_PATH = (
     PROJECT_ROOT / "models" / "isolation_forest_anomaly_model.joblib"
 )
+RUL_MODEL_PATH = PROJECT_ROOT / "models" / "rul_model.joblib"

@@ -16,6 +16,7 @@ def parse_arguments() -> argparse.Namespace:
         default="healthy",
     )
     parser.add_argument("--count", type=int, default=10)
+    parser.add_argument("--starting-cycle", type=int, default=1)
     parser.add_argument("--interval", type=float, default=1)
     parser.add_argument("--mqtt-host", default="127.0.0.1")
     parser.add_argument("--mqtt-port", type=int, default=1883)
@@ -36,7 +37,11 @@ def main() -> None:
 
     try:
         for step in range(args.count):
-            reading = generator.generate(mode=args.mode, step=step)
+            reading = generator.generate(
+                mode=args.mode,
+                step=step,
+                operating_cycle=args.starting_cycle + step,
+            )
             topic = publisher.publish(
                 equipment_id=args.equipment_id,
                 device_id=device_id,
